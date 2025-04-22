@@ -1,17 +1,32 @@
+import express from "express";
+import http from "http";
+import cors from "cors";
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import mergedResolvers from "./resolvers/index.js";
 import mergedTypeDefs from "./type-defs/index.js";
 
-async function main() {
-  const server = new ApolloServer({
-    typeDefs: mergedTypeDefs,
-    resolvers: mergedResolvers,
-  });
+const app = express();
+const httpServer = http.createServer(app);
 
-  const { url } = await startStandaloneServer(server);
+const server = new ApolloServer({
+  typeDefs: mergedTypeDefs,
+  resolvers: mergedResolvers,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+});
 
-  console.log(`Server Started at ${url}`);
-}
+await server.start();
 
-main();
+app.use(
+  "/",
+  cors(),
+  express.json(),
+  expressMiddleware(server, {
+    context: async ({ req }) => ({ token: req.headers.token }),
+  })
+);
+
+await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+
+console.log(`Server Running on - http://localhost:4000/`);
