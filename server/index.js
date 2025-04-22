@@ -1,12 +1,15 @@
 import express from "express";
 import http from "http";
 import cors from "cors";
+import dotenv from "dotenv";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import mergedResolvers from "./resolvers/index.js";
 import mergedTypeDefs from "./type-defs/index.js";
+import connectDb from "./db/connect.js";
 
+dotenv.config();
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -28,5 +31,6 @@ app.use(
 );
 
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+await connectDb();
 
 console.log(`Server Running on - http://localhost:4000/`);
