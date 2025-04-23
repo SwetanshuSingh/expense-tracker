@@ -1,14 +1,16 @@
 import TransactionCategory from "./transaction-category";
 
 type AmountBarProps = {
+  income: number;
   expenses: number;
   investment: number;
   savings: number;
 };
 
-function AmountBar({ expenses, investment, savings }: AmountBarProps) {
-  const totalAmount = expenses + investment + savings;
+function AmountBar({ income, expenses, investment, savings }: AmountBarProps) {
+  const totalAmount = income + expenses + investment + savings;
 
+  const incomePercentage = ((income / totalAmount) * 100).toFixed();
   const expensesPercentage = ((expenses / totalAmount) * 100).toFixed(0);
   const savingsPercentage = ((savings / totalAmount) * 100).toFixed(0);
   const investmentPercentage = ((investment / totalAmount) * 100).toFixed(0);
@@ -16,10 +18,14 @@ function AmountBar({ expenses, investment, savings }: AmountBarProps) {
   console.log(savingsPercentage);
 
   return (
-    <div className="w-2/4 h-1.5 rounded-lg flex items-center">
+    <div className="w-2/4 h-1.5 rounded-lg flex gap-0.5 items-center">
+      <span
+        style={{ width: `${incomePercentage}%` }}
+        className="h-full bg-green-500 rounded-s-lg"
+      ></span>
       <span
         style={{ width: `${expensesPercentage}%` }}
-        className="h-full bg-red-500 rounded-s-lg"
+        className="h-full bg-red-500"
       ></span>
       <span
         style={{ width: `${investmentPercentage}%` }}
@@ -42,7 +48,12 @@ function Summary() {
         <p className="text-sm font-medium text-gray-600">Net Total</p>
         <div className="flex justify-between items-baseline gap-2">
           <p className="text-xl font-medium">$218,345.28</p>
-          <AmountBar expenses={400} investment={600} savings={900} />
+          <AmountBar
+            income={900}
+            expenses={400}
+            investment={600}
+            savings={900}
+          />
         </div>
       </span>
 
