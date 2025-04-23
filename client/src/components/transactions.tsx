@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import TransactionsByDay from "./transaction-by-day";
+import AddTransaction from "./add-transaction-btn";
 
 function Transactions() {
   return (
@@ -26,9 +27,10 @@ function Transactions() {
             </span>
           </button>
 
-          <button className="w-fit bg-black/80 text-white rounded-3xl px-5 py-2">
+          <AddTransaction />
+          {/* <button className="w-fit bg-black/80 text-white rounded-3xl px-5 py-2">
             Add
-          </button>
+          </button> */}
         </span>
       </div>
 
